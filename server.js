@@ -1,15 +1,14 @@
+// ws-server/server.js
 const { createServer } = require('http');
 const WebSocket = require('ws');
-const url = require('url');
 
 const PORT = process.env.PORT || 3001;
-const server = createServer((req, res) => {
-  // Respon HTTP sederhana agar server tetap sehat di Railway
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('WebSocket server is running\n');
-});
 
-const wss = new WebSocket.Server({ noServer: true });
+// Buat HTTP server kosong (tanpa Next.js)
+const server = createServer();
+
+// Buat WebSocket Server
+const wss = new WebSocket.Server({ server });
 
 const clients = new Set();
 
@@ -33,18 +32,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-server.on('upgrade', (request, socket, head) => {
-  const pathname = url.parse(request.url).pathname;
-
-  if (pathname === '/ws') {
-    wss.handleUpgrade(request, socket, head, (ws) => {
-      wss.emit('connection', ws, request);
-    });
-  } else {
-    socket.destroy();
-  }
-});
-
 server.listen(PORT, () => {
-  console.log(`🚀 WebSocket server running at http://localhost:${PORT}/ws`);
+  console.log(`🚀 WebSocket server running at http://localhost:${PORT}`);
 });
