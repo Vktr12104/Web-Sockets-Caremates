@@ -32,8 +32,6 @@ wss.on('connection', (ws, req) => {
     }
   });
 });
-
-// API to send message to ESP32
 app.get('/send-to-esp32', (req, res) => {
   if (espSocket && espSocket.readyState === WebSocket.OPEN) {
     espSocket.send('🚨 Alert from server to ESP32!');
@@ -42,8 +40,6 @@ app.get('/send-to-esp32', (req, res) => {
     return res.status(404).send('❌ ESP32 not connected');
   }
 });
-
-// Use 0.0.0.0 to allow access from other devices on the same network
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
 });
